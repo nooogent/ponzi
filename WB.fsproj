@@ -52,13 +52,13 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Library1.fs" />
-    <None Include="Script.fsx" />
     <Compile Include="WB1.fs" />
     <Content Include="packages.config" />
     <Compile Include="StackCalc.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Data.fs" />
     <Compile Include="Functions.fs" />
+    <None Include="Script.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Charting">

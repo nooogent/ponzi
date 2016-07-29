@@ -2,20 +2,8 @@
 
     module Data = 
 
+        open System
         open Ponzi.Types
-        open Ponzi.Player
-        open Ponzi.Group
-        open Ponzi.Question
-
-    
-        //let predictions = 
-        //    [
-        //        TeamPrediction({Q})
-        //    
-        //    ]
-
-        //let competition =
-        //    { Groups = groups; Players = players; Questions = questions }
 
         let private getData =
 
@@ -87,50 +75,33 @@
             let groupE = Group "Group E"
             let groupF = Group "Group F"
 
-            let groups =  [groupA;groupB;groupC;groupD;groupE;groupF]
-
-            let getByName name = List.find(fun item -> item = name)
-            //let getTeamByName name = List.find(fun team -> team = name)
-            //let getGroupByName name obj = getByName obj (Group name)
-
-            let groupA = groups |> getByName (Group "Group A")
+            let groups = [groupA;groupB;groupC;groupD;groupE;groupF]
 
             let groupTeams =
                 []
-                |> Group.addTeam groupA teamFrance
-                |> Group.addTeam groupA teamSwiterland
-                |> Group.addTeam groupA teamAlbania
-                |> Group.addTeam groupA teamRomania
-                |> Group.addTeam groupB teamEngland
-                |> Group.addTeam groupB teamRussia
-                |> Group.addTeam groupB teamWales
-                |> Group.addTeam groupB teamSlovakia
-                |> Group.addTeam groupC teamGermany
-                |> Group.addTeam groupC teamUkraine
-                |> Group.addTeam groupC teamPoland
-                |> Group.addTeam groupC teamNIreland
-                |> Group.addTeam groupD teamSpain
-                |> Group.addTeam groupD teamCzech
-                |> Group.addTeam groupD teamTurkey
-                |> Group.addTeam groupD teamCroatia
-                |> Group.addTeam groupE teamBelgium
-                |> Group.addTeam groupE teamItaly
-                |> Group.addTeam groupE teamIreland
-                |> Group.addTeam groupE teamSweden
-                |> Group.addTeam groupF teamPortugal
-                |> Group.addTeam groupF teamIceland
-                |> Group.addTeam groupF teamAustria
-                |> Group.addTeam groupF teamHungary
+                |> Group.addTeams groupA [teamFrance;teamSwiterland;teamAlbania;teamRomania]
+                |> Group.addTeams groupB [teamEngland;teamRussia;teamWales;teamSlovakia]
+                |> Group.addTeams groupC [teamGermany;teamUkraine;teamPoland;teamNIreland]
+                |> Group.addTeams groupD [teamSpain;teamCzech;teamTurkey;teamCroatia]
+                |> Group.addTeams groupE [teamBelgium;teamItaly;teamIreland;teamSweden]
+                |> Group.addTeams groupF [teamPortugal;teamIceland;teamAustria;teamHungary]
 
-            let winnerQuestion = TeamQuestion({Text = "Winner"; Teams = teams})
-            let runnerUpQuestion = TeamQuestion({Text = "Runner Up"; Teams = teams})
-            let losingPlayerQuestion = PlayerQuestion({Text = "Who will lose"; Players = players})
+            let winnerQuestion = Question.TeamQuestion(QuestionText "Winner", teams)
+            let runnerUpQuestion = Question.TeamQuestion(QuestionText "Runner Up", teams)
+            let losingPlayerQuestion = Question.PlayerQuestion(QuestionText "Who will lose", players)
 
             let questions = [winnerQuestion;runnerUpQuestion;losingPlayerQuestion]
 
+            let fixtureFranceVsRomania = { Date = new DateTime(2016, 6, 1, 20, 0, 0); Home = teamFrance; Away = teamRomania }
+            let fixtureSwiterlandVsAlbania = { Date = new DateTime(2016, 6, 2, 17, 30, 0); Home = teamSwiterland; Away = teamAlbania }
+            let fixtureEnglandVsRussia = { Date = new DateTime(2016, 6, 2, 20, 0, 0); Home = teamEngland; Away = teamRussia }
 
-            let predictions = []
-            let competition = { Groups = groups; Players = players; Questions = questions; Predictions = predictions}
+            let fixtures = [fixtureFranceVsRomania;fixtureSwiterlandVsAlbania;fixtureEnglandVsRussia]
+
+            let andyWinnerQuestionPrediction = Prediction.TeamPrediction (playerAndy, winnerQuestion, teamFrance) 
+
+            let predictions = [andyWinnerQuestionPrediction]
+            let competition = { Groups = groups; GroupTeams = groupTeams; Fixtures = fixtures; Players = players; Questions = questions; Predictions = predictions }
             competition
 
         let private instance = lazy(getData)
@@ -138,30 +109,31 @@
 
 
         let groups = competition.Groups
+        let groupTeams = competition.GroupTeams
 
         let getGroup groupName =
             groups
             |> List.find(fun g -> g = groupName)
 
         let getGroupTeams groupName =
-            GroupTeams groupName groups.Teams
+            Group.GroupTeams groupName groupTeams
 
-        let getAllTeams = 
-            groups
-            |> Seq.map(fun g -> g.Teams)
-            |> Seq.concat
-            |> Seq.toList
+//        let getAllTeams = 
+//            groups
+//            |> Seq.map(fun g -> g.Teams)
+//            |> Seq.concat
+//            |> Seq.toList
+//
+//        let getPlayer playerName =
+//            players
+//            |> List.find(fun g -> g.Name = playerName)
 
-        let getPlayer playerName =
-            players
-            |> List.find(fun g -> g.Name = playerName)
-
-        let questions =
-            [
-                TeamQuestion({Id = 1; Text = "Winner"; Teams = getAllTeams})
-                TeamQuestion({Id = 2; Text = "Runner Up"; Teams = getAllTeams})
-                PlayerQuestion({Id = 3; Text = "Who will lose"; Players = players})
-            ]
+//        let questions =
+//            [
+//                TeamQuestion({Id = 1; Text = "Winner"; Teams = getAllTeams})
+//                TeamQuestion({Id = 2; Text = "Runner Up"; Teams = getAllTeams})
+//                PlayerQuestion({Id = 3; Text = "Who will lose"; Players = players})
+//            ]
 
         //
         //let getSpendings id =
