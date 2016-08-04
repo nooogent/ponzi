@@ -28,3 +28,5 @@ let predictions = getPredictions
 
 testFixtureResult 3 2
 
+getPoints
+

@@ -98,9 +98,24 @@
 
             let fixtures = [fixtureFranceVsRomania;fixtureSwiterlandVsAlbania;fixtureEnglandVsRussia]
 
-            let andyWinnerQuestionPrediction = Prediction.TeamPrediction (playerAndy, winnerQuestion, teamFrance) 
+            let andyWinnerQuestionPrediction = PlayerPrediction (playerAndy, winnerQuestion, TeamAnswer(teamFrance)) 
+            let andyrunnerUpQuestionPrediction = PlayerPrediction (playerAndy, runnerUpQuestion, TeamAnswer(teamPortugal))
+            let andylosingPlayerQuestionPrediction = PlayerPrediction (playerAndy, losingPlayerQuestion, PlayerAnswer(playerTuck))
 
-            let predictions = [andyWinnerQuestionPrediction]
+            let nickWinnerQuestionPrediction = PlayerPrediction (playerNick, winnerQuestion, TeamAnswer(teamEngland)) 
+            let nickrunnerUpQuestionPrediction = PlayerPrediction (playerNick, runnerUpQuestion, TeamAnswer(teamPortugal))
+            let nicklosingPlayerQuestionPrediction = PlayerPrediction (playerNick, losingPlayerQuestion, PlayerAnswer(playerMark))
+
+            let predictions = 
+                [
+                    andyWinnerQuestionPrediction;
+                    nickrunnerUpQuestionPrediction;
+                    andyrunnerUpQuestionPrediction;
+                    nicklosingPlayerQuestionPrediction;
+                    andylosingPlayerQuestionPrediction;
+                    nickWinnerQuestionPrediction
+                ]
+
             let competition = { Groups = groups; GroupTeams = groupTeams; Fixtures = fixtures; Players = players; Questions = questions; Predictions = predictions }
             competition
 

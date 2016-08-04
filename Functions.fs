@@ -15,4 +15,6 @@
 
         let testFixtureResult home away = Fixture.HomeAwayDraw (home,away)
 
-        let getPoints = calculatePoints results
+        let results = [(getQuestions.[0],TeamAnswer(Team "France"));(getQuestions.[1],TeamAnswer(Team "Portugal"));(getQuestions.[2],PlayerAnswer(Player "Simon"))]
+
+        let getPoints = Competition.CalculatePoints results Ponzi.Data.competition

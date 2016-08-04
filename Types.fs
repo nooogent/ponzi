@@ -52,7 +52,7 @@
             
         type OptionAnswer = OptionAnswer of string
         type FreeTextAnswer = FreeTextAnswer of string
-        type CorrectAnswer<'a> = CorrectAnswer of 'a
+        //type CorrectAnswer<'a> = CorrectAnswer of 'a
 
         type Question = 
             | GroupWinnerQuestion of QuestionText * Group
@@ -71,9 +71,9 @@
             | FixtureAnswer of Fixture
             | FreeTextAnswer of FreeTextAnswer
 
-        type Prediction = 
-            | PlayerPrediction of Player * Question * Answer
-            | CorrectPrediction of Question * CorrectAnswer<Answer>
+        type Prediction = PlayerPrediction of Player * Question * Answer
+
+        type CorrectPrediction = CorrectPrediction of Question * Answer
 
 //        type GroupWinnerPrediction = {Question: GroupWinnerQuestion; Answer: Team}
 //        type TeamPrediction = {Question: TeamQuestion; Answer: Team}
@@ -143,27 +143,31 @@
     module Prediction =
         open Types
 
-        let GetPoints results predictions =
+        let GetPoints results (predictions:Prediction list) =
 
-            let getPlayerPredictionsForQuestion predictions question = 
+            let getPlayerPredictionsForQuestion question (predictions:Prediction list) = 
                 predictions
-                |> List.filter(fun (pl,q,pre) -> q = question)
+                |> List.filter(fun p -> (match p with | PlayerPrediction (_,q,_) -> q) = question)
                 
-            let isPredictionCorrect playerPrediction correctPrediction = 
+            let getPlayerPointsForQuestion correctPrediction (playerPrediction:Prediction) = 
                 match playerPrediction with
-                | (_,question,answer) when question = fst correctPrediction && answer = snd correctPrediction -> true
-                | _ -> false
-
-            let points = 
-                results
-                |> List.map(fun res -> (getPlayerPredictionsForQuestion predictions res, res))
-                |> List.sumBy(fun pre,res -> if isPredictionCorrect pre then 1 else 0)
-
-            points
+                | PlayerPrediction (player,question,answer) when question = fst correctPrediction && answer = snd correctPrediction -> (player, 1)
+                | PlayerPrediction (player,_,_) -> (player, 0)
+                
+            let getPlayerPoints (predictions:Prediction list) correctPrediction = 
+                predictions
+                |> getPlayerPredictionsForQuestion (fst correctPrediction)
+                |> List.map(getPlayerPointsForQuestion correctPrediction)
+                
+            results
+            |> List.map(getPlayerPoints predictions)
+            |> Seq.concat
+            |> Seq.groupBy fst
+            |> Seq.map (fun (p,s) -> (p,Seq.sumBy snd s))
+            |> Seq.toList
                     
     module Competition =
         open Types
 
-        let calculatePoints results competition = 
-            results 
-            |>  
+        let CalculatePoints results competition = 
+            Prediction.GetPoints results competition.Predictions  
