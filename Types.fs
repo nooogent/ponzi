@@ -31,28 +31,10 @@
             | R16 = 5
             | Group = 6
 
-//        type GroupWinnerQuestion = { Text: string; Group: Group }
-//        type TeamQuestion = { Text: string; Teams: Team list }
-//        type TeamPositionQuestion = { Text: string; Team: Team}
-//        type OptionQuestion = { Text: string; Options: string list }
-//        type PlayerQuestion = { Text: string; Players: Player list }
-//        type FixtureQuestion = { Text: string; Fixture: Fixture }
-//        type FreeTextQuestion = { Text: string; }
-
         type QuestionText = QuestionText of string
 
-//        type Question = 
-//            | GroupWinnerQuestion of GroupWinnerQuestion
-//            | TeamQuestion of TeamQuestion
-//            | TeamPositionQuestion of TeamPositionQuestion
-//            | OptionQuestion of OptionQuestion
-//            | PlayerQuestion of PlayerQuestion
-//            | FixtureQuestion of FixtureQuestion
-//            | FreeTextQuestion of FreeTextQuestion
-            
         type OptionAnswer = OptionAnswer of string
         type FreeTextAnswer = FreeTextAnswer of string
-        //type CorrectAnswer<'a> = CorrectAnswer of 'a
 
         type Question = 
             | GroupWinnerQuestion of QuestionText * Group
@@ -71,26 +53,9 @@
             | FixtureAnswer of Fixture
             | FreeTextAnswer of FreeTextAnswer
 
-        type Prediction = PlayerPrediction of Player * Question * Answer
+        type Prediction = Prediction of Player * Question * Answer
 
         type CorrectPrediction = CorrectPrediction of Question * Answer
-
-//        type GroupWinnerPrediction = {Question: GroupWinnerQuestion; Answer: Team}
-//        type TeamPrediction = {Question: TeamQuestion; Answer: Team}
-//        type TeamPositionPrediction = {Question: TeamPositionQuestion; Answer: Position}
-//        type OptionPrediction = {Question: OptionQuestion; Answer: string}
-//        type PlayerPrediction = {Question: PlayerQuestion; Answer: Player}
-//        type FixturePrediction = {Question: FixtureQuestion; Answer: FixtureResult}
-//        type FreeTextPrediction = {Question: FreeTextQuestion; Answer: string}
-
-//        type Prediction = 
-//            | GroupWinnerPrediction of Player * GroupWinnerPrediction
-//            | TeamPrediction of Player * TeamPrediction
-//            | TeamPositionPrediction of Player * TeamPositionPrediction
-//            | OptionPrediction of Player * OptionPrediction
-//            | PlayerPrediction of Player * PlayerPrediction
-//            | FixturePrediction of Player * FixturePrediction
-//            | FreeTextPrediction of Player * FreeTextPrediction
 
         type Competition = {
             Groups: Group list;  
@@ -143,24 +108,24 @@
     module Prediction =
         open Types
 
-        let GetPoints results (predictions:Prediction list) =
+        let GetPoints results playerPredictions =
 
-            let getPlayerPredictionsForQuestion question (predictions:Prediction list) = 
-                predictions
-                |> List.filter(fun p -> (match p with | PlayerPrediction (_,q,_) -> q) = question)
+            let getPlayerPredictionsForQuestion question playerPredictions = 
+                playerPredictions
+                |> List.filter(fun (Prediction (p,q,a)) -> question = q)
                 
-            let getPlayerPointsForQuestion correctPrediction (playerPrediction:Prediction) = 
+            let getPlayerPointsForQuestion correctPrediction playerPrediction = 
                 match playerPrediction with
-                | PlayerPrediction (player,question,answer) when question = fst correctPrediction && answer = snd correctPrediction -> (player, 1)
-                | PlayerPrediction (player,_,_) -> (player, 0)
+                | Prediction (p,q,a) when q = fst correctPrediction && a = snd correctPrediction -> (p, 1)
+                | Prediction (p,_,_) -> (p, 0)
                 
-            let getPlayerPoints (predictions:Prediction list) correctPrediction = 
-                predictions
+            let getPlayerPoints playerPredictions correctPrediction = 
+                playerPredictions
                 |> getPlayerPredictionsForQuestion (fst correctPrediction)
                 |> List.map(getPlayerPointsForQuestion correctPrediction)
                 
             results
-            |> List.map(getPlayerPoints predictions)
+            |> List.map(getPlayerPoints playerPredictions)
             |> Seq.concat
             |> Seq.groupBy fst
             |> Seq.map (fun (p,s) -> (p,Seq.sumBy snd s))

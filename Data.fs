@@ -98,13 +98,13 @@
 
             let fixtures = [fixtureFranceVsRomania;fixtureSwiterlandVsAlbania;fixtureEnglandVsRussia]
 
-            let andyWinnerQuestionPrediction = PlayerPrediction (playerAndy, winnerQuestion, TeamAnswer(teamFrance)) 
-            let andyrunnerUpQuestionPrediction = PlayerPrediction (playerAndy, runnerUpQuestion, TeamAnswer(teamPortugal))
-            let andylosingPlayerQuestionPrediction = PlayerPrediction (playerAndy, losingPlayerQuestion, PlayerAnswer(playerTuck))
+            let andyWinnerQuestionPrediction = Prediction (playerAndy, winnerQuestion, TeamAnswer(teamFrance)) 
+            let andyrunnerUpQuestionPrediction = Prediction (playerAndy, runnerUpQuestion, TeamAnswer(teamPortugal))
+            let andylosingPlayerQuestionPrediction = Prediction (playerAndy, losingPlayerQuestion, PlayerAnswer(playerTuck))
 
-            let nickWinnerQuestionPrediction = PlayerPrediction (playerNick, winnerQuestion, TeamAnswer(teamEngland)) 
-            let nickrunnerUpQuestionPrediction = PlayerPrediction (playerNick, runnerUpQuestion, TeamAnswer(teamPortugal))
-            let nicklosingPlayerQuestionPrediction = PlayerPrediction (playerNick, losingPlayerQuestion, PlayerAnswer(playerMark))
+            let nickWinnerQuestionPrediction = Prediction (playerNick, winnerQuestion, TeamAnswer(teamEngland)) 
+            let nickrunnerUpQuestionPrediction = Prediction (playerNick, runnerUpQuestion, TeamAnswer(teamPortugal))
+            let nicklosingPlayerQuestionPrediction = Prediction (playerNick, losingPlayerQuestion, PlayerAnswer(playerSimon))
 
             let predictions = 
                 [
@@ -121,54 +121,4 @@
 
         let private instance = lazy(getData)
         let competition = instance.Value;
-
-
-        let groups = competition.Groups
-        let groupTeams = competition.GroupTeams
-
-        let getGroup groupName =
-            groups
-            |> List.find(fun g -> g = groupName)
-
-        let getGroupTeams groupName =
-            Group.GroupTeams groupName groupTeams
-
-//        let getAllTeams = 
-//            groups
-//            |> Seq.map(fun g -> g.Teams)
-//            |> Seq.concat
-//            |> Seq.toList
-//
-//        let getPlayer playerName =
-//            players
-//            |> List.find(fun g -> g.Name = playerName)
-
-//        let questions =
-//            [
-//                TeamQuestion({Id = 1; Text = "Winner"; Teams = getAllTeams})
-//                TeamQuestion({Id = 2; Text = "Runner Up"; Teams = getAllTeams})
-//                PlayerQuestion({Id = 3; Text = "Who will lose"; Players = players})
-//            ]
-
-        //
-        //let getSpendings id =
-        //    Json.Load "Data.json"
-        //    |> Seq.filter(fun c -> c.Id = id)
-        //    |> Seq.collect(fun c -> c.Spendings)
-        //    |> List.ofSeq
-        //
-        //
-        //type Csv = CsvProvider<"Data.csv">
-        //
-        //let getCustomers () =
-        //    let file = Csv.Load "Data.csv"
-        //    file.Rows
-        //    |> Seq.map(fun c->
-        //        {
-        //            Id = c.Id
-        //            IsVip = c.IsVip
-        //            Credit = c.Credit * 1M<USD>
-        //            PersonalDetails = None
-        //            Notifications = NoNotifications
-        //        })
 
