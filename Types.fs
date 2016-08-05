@@ -125,7 +125,7 @@
                 |> List.map(getPlayerPointsForQuestion correctPrediction)
                 
             results
-            |> List.map(getPlayerPoints playerPredictions)
+            |> Seq.map(getPlayerPoints playerPredictions)
             |> Seq.concat
             |> Seq.groupBy fst
             |> Seq.map (fun (p,s) -> (p,Seq.sumBy snd s))
