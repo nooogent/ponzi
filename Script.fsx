@@ -26,7 +26,7 @@ let teams = getTeams
 let questions = getQuestions
 let predictions = getPredictions
 
-testFixtureResult 3 2
+let result = testFixtureResult 3 2
 
-getPoints
+let points = getPoints
 

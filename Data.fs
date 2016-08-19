@@ -115,8 +115,23 @@
                     andylosingPlayerQuestionPrediction;
                     nickWinnerQuestionPrediction
                 ]
+            
+            let correctPredictions = [
+                CorrectPrediction (winnerQuestion,TeamAnswer(Team "France"));
+                CorrectPrediction (runnerUpQuestion,TeamAnswer(Team "Portugal"));
+                CorrectPrediction (losingPlayerQuestion,PlayerAnswer(Player "Simon"))
+            ]
 
-            let competition = { Groups = groups; GroupTeams = groupTeams; Fixtures = fixtures; Players = players; Questions = questions; Predictions = predictions }
+            let competition = {
+                Groups = groups;
+                GroupTeams = groupTeams;
+                Fixtures = fixtures;
+                Players = players;
+                Questions = questions;
+                Predictions = predictions;
+                CorrectPredictions = correctPredictions;
+            }
+
             competition
 
         let private instance = lazy(getData)

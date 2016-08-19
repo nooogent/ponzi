@@ -58,12 +58,13 @@
         type CorrectPrediction = CorrectPrediction of Question * Answer
 
         type Competition = {
-            Groups: Group list;  
+            Groups: Group list;
             GroupTeams: (Group * Team list) list;
             Fixtures: Fixture list;
-            Questions: Question list; 
-            Players: Player list; 
+            Questions: Question list;
+            Players: Player list;
             Predictions: Prediction list;
+            CorrectPredictions: CorrectPrediction list;
         }
         
     module Player =
